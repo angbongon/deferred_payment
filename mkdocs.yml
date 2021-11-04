@@ -1,9 +1,38 @@
 site_name: Deferred Payment Docs
-dev_addr: 0.0.0.0:7000
-
 nav:
   - Home: index.md
   - About: about.md
   - How to: howto.md
   - PyCharm: pycharm/configuration.md
-theme: readthedocs
+
+dev_addr: 0.0.0.0:7000
+
+theme:
+  name: material
+  palette:
+      - media: "(prefers-color-scheme: light)"
+        scheme: default
+        toggle:
+          icon: material/toggle-switch-off-outline
+          name: Switch to dark mode
+      - media: "(prefers-color-scheme: dark)"
+        scheme: slate
+        toggle:
+          icon: material/toggle-switch
+          name: Switch to light mode
+  features:
+      - navigation.tabs
+
+markdown_extensions:
+    - sane_lists
+    - codehilite
+    - fenced_code
+    - pymdownx.highlight
+    - pymdownx.superfences
+    - pymdownx.tasklist
+    - pymdownx.tabbed
+    - pymdownx.emoji
+
+plugins:
+    - search
+
