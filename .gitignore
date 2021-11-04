@@ -334,3 +334,7 @@ deferred_payment/media/
 .env
 .envs/*
 !.envs/.local/
+
+### VSCode
+.devcontainer/
+.vscode/
