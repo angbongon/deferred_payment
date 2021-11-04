@@ -34,6 +34,7 @@ WORKDIR ${APP_HOME}
 
 # Install required system dependencies
 RUN apt-get update && apt-get install --no-install-recommends -y \
+  curl \
   # psycopg2 dependencies
   libpq-dev \
   # Translations dependencies
@@ -49,7 +50,9 @@ RUN python -m pip install --upgrade pip
 # copy python dependency wheels from python-build-stage
 # COPY --from=python-build-stage /usr/src/app/wheels  /wheels/
 
-RUN pip install "poetry==${POETRY_VERSION}"
+RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/${POETRY_VERSION}/get-poetry.py | python -
+
+ENV PATH="${PATH}:/root/.poetry/bin"
 
 # Requirements are installed here to ensure they will be cached.
 COPY ./poetry.lock ./pyproject.toml ./
