@@ -48,6 +48,14 @@ After few seconds, all *Run/Debug Configurations* should be ready to use.
 
 * and many others..
 
+## Update your Git local repo 
+
+To avoid tracking the changes to the files `.idea/misc.xml` and `.idea/deferred_payment.xml` locally (but maintain them in VCS) do the following
+```bash
+$ git update-index --assume-unchanged .idea/misc.xml
+$ git update-index --assume-unchanged .idea/deferred_payment.xml
+```
+
 # Known issues
 
 * Pycharm hangs on "Connecting to Debugger"
