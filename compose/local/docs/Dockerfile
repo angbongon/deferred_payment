@@ -17,7 +17,7 @@ RUN apt-get update \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && rm -rf /var/lib/apt/lists/*
 
-RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/${POETRY_VERSION}/get-poetry.py | python - 
+RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/${POETRY_VERSION}/get-poetry.py | python -
 
 ENV PATH="${PATH}:/root/.poetry/bin"
 
@@ -28,8 +28,12 @@ COPY ./poetry.lock ./pyproject.toml ./
 RUN poetry config virtualenvs.create false \
     && poetry install --remove-untracked --no-interaction --no-ansi
 
+# Copy content
+COPY ./mkdocs.yml ./app/
+COPY ./docs ./app/docs/
+
+# Copy script
 COPY ./compose/local/docs/start /start-docs
-RUN sed -i 's/\r$//g' /start-docs
 RUN chmod +x /start-docs
 
 WORKDIR /app
