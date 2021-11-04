@@ -1,1 +1,7 @@
-site_name: My Docs
+site_name: Deferred Payment Docs
+nav:
+  - Home: index.md
+  - About: about.md
+  - How to: howto.md
+  - PyCharm: pycharm/configuration.md
+theme: readthedocs
