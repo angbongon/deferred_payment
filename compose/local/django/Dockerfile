@@ -15,13 +15,9 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   # psycopg2 dependencies
   libpq-dev
 
-# Requirements are installed here to ensure they will be cached.
-COPY ./requirements .
-
 # Create Python Dependency and Sub-Dependency Wheels.
-RUN pip wheel --wheel-dir /usr/src/app/wheels  \
-  -r ${BUILD_ENVIRONMENT}.txt
-
+# RUN pip wheel --wheel-dir /usr/src/app/wheels  \
+#  -r ${BUILD_ENVIRONMENT}.txt
 
 # Python 'run' stage
 FROM python as python-run-stage
@@ -31,13 +27,13 @@ ARG APP_HOME=/app
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
+ENV POETRY_VERSION=1.1.11
 ENV BUILD_ENV ${BUILD_ENVIRONMENT}
 
 WORKDIR ${APP_HOME}
 
 # Install required system dependencies
 RUN apt-get update && apt-get install --no-install-recommends -y \
-  curl \
   # psycopg2 dependencies
   libpq-dev \
   # Translations dependencies
@@ -47,16 +43,23 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
 
+RUN python -m pip install --upgrade pip
+
 # All absolute dir copies ignore workdir instruction. All relative dir copies are wrt to the workdir instruction
 # copy python dependency wheels from python-build-stage
-COPY --from=python-build-stage /usr/src/app/wheels  /wheels/
+# COPY --from=python-build-stage /usr/src/app/wheels  /wheels/
 
-RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python - \
-  && poetry completions bash > /etc/bash_completion.d/poetry.bash-completion
+RUN pip install "poetry==${POETRY_VERSION}"
+
+# Requirements are installed here to ensure they will be cached.
+COPY ./poetry.lock ./pyproject.toml ./
+
+RUN poetry config virtualenvs.create false \
+  && poetry install --remove-untracked --no-interaction --no-ansi
 
 # use wheels to install python dependencies
-RUN pip install --no-cache-dir --no-index --find-links=/wheels/ /wheels/* \
-	&& rm -rf /wheels/
+# RUN pip install --no-cache-dir --no-index --find-links=/wheels/ /wheels/* \
+#	  && rm -rf /wheels/
 
 COPY ./compose/production/django/entrypoint /entrypoint
 RUN sed -i 's/\r$//g' /entrypoint
