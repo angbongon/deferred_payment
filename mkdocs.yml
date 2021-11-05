@@ -1,4 +1,5 @@
 site_name: Deferred Payment Docs
+dev_addr: 0.0.0.0:7000
 nav:
   - Home: index.md
   - About: about.md
