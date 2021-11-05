@@ -28,6 +28,10 @@ COPY ./poetry.lock ./pyproject.toml ./
 RUN poetry config virtualenvs.create false \
     && poetry install --remove-untracked --no-interaction --no-ansi
 
+# Copy content
+COPY ./mkdocs.yml ./app/
+COPY ./docs ./app/docs/
+
 COPY ./compose/local/docs/start /start-docs
 RUN sed -i 's/\r$//g' /start-docs
 RUN chmod +x /start-docs
