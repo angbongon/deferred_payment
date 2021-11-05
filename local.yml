@@ -43,7 +43,7 @@ services:
     env_file:
       - ./.envs/.local/.django
     volumes:
-      - ./docs:/docs:z
+      - ./docs:/app/docs:z
       - ./config:/app/config:z
       - ./deferred_payment:/app/deferred_payment:z
       - ./mkdocs.yml:/app/mkdocs.yml:z
